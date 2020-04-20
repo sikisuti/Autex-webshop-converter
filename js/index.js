@@ -68,7 +68,7 @@ function readFile (evt) {
       let destString = csvHeaders.join(',') + "\n";
       arrDest.forEach(row => {
         row.forEach(col => {
-          if (col.includes(csvDelimiter)) {
+          if (col.includes(csvDelimiter) || col.includes(' ')) {
             col = '"' + col.replace('"', '""'), + '"';
           }
         });
