@@ -1,4 +1,4 @@
-const arrDefaults = [
+const arrConstants = [
     [1, 'simple'],
     [4, '1'],
     [5, '0'],
@@ -11,4 +11,4 @@ const arrDefaults = [
 ]
 
 
-export let defaults = new Map(arrDefaults);
+export let constants = new Map(arrConstants);

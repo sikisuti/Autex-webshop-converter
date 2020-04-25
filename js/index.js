@@ -68,7 +68,7 @@ function readFile (evt) {
       let destString = csvHeaders.join(',') + "\n";
       arrDest.forEach(row => {
         row.forEach(col => {
-          if (col.includes(csvDelimiter) || col.includes(' ')) {
+          if (col && (col.includes(csvDelimiter) || col.includes(' '))) {
             col = '"' + col.replace('"', '""'), + '"';
           }
         });
@@ -77,12 +77,16 @@ function readFile (evt) {
       });
 
       console.log(destString);
-      let hiddenElement = document.createElement('a');
-      hiddenElement.href = 'data:text/csv;charset=utf-8,' + destString;
-      hiddenElement.target = '_blank';
-      hiddenElement.download = 'source.csv';
-      hiddenElement.click();
+//      downloadFile(destString);
     }
 
     reader.readAsText(file)
+ }
+
+ function downloadFile(destString) {
+   let hiddenElement = document.createElement('a');
+   hiddenElement.href = 'data:text/csv;charset=utf-8,' + destString;
+   hiddenElement.target = '_blank';
+   hiddenElement.download = 'source.csv';
+   hiddenElement.click();
  }
