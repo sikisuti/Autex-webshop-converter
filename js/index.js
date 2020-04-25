@@ -77,7 +77,7 @@ function readFile (evt) {
       });
 
       console.log(destString);
-//      downloadFile(destString);
+      downloadFile(destString);
     }
 
     reader.readAsText(file)

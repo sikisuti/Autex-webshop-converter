@@ -12,14 +12,20 @@ class Dummy {
 
     convert(arrSource) {
         let arrDest = [];
-        arrSource.forEach(sourceRow => {
+        for (let i = 0; i < arrSource.length; i++) {
+            let sourceRow = arrSource[i];
+            let checkField = sourceRow[15];
+            if (!checkField || isNaN(checkField.replace(' ', ''))) {
+                continue;
+            };
+
             let destRow = Array(54).fill('');
 
             this.addConstants(destRow);
             this.addRules(sourceRow, destRow);
 
             arrDest.push(destRow);
-        });
+        };
 
         return arrDest;
     }
