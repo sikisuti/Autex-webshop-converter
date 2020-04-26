@@ -1,6 +1,6 @@
 import { constants } from '../constants.js'
 
-class Dummy {
+class Autex {
     constructor() {
         this.rules = new Map([
             [0, 2],
@@ -42,7 +42,9 @@ class Dummy {
         this.rules.forEach((value, key) => {
             destRow[value] = sourceRow[key];
         }); 
+
+        destRow[13] = sourceRow[8] === '0' ? '0' : '1';
     }
 }
 
-export { Dummy };
+export { Autex };

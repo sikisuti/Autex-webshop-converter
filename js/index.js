@@ -1,10 +1,10 @@
-import { Dummy } from './provider/Dummy.js';
+import { Autex } from './provider/Autex.js';
 import { Another } from './provider/Another.js';
 import { csvHeaders } from './csvHeaders.js';
 
 const csvDelimiter = ',';
 
-let providers = ['Dummy', 'Another'];
+let providers = ['Autex'];
 
 let providerChooser = document.getElementById("providerChooser");
 providers.forEach(element => {
@@ -58,23 +58,23 @@ function readFile (evt) {
     reader.onload = function(event) {  
       let selectedProvider = providerChooser.options[providerChooser.selectedIndex].text;
       let provider;
-      if (selectedProvider === 'Dummy') {
-        provider = new Dummy();
-      } else if (selectedProvider === 'Another') {
-        provider = new Another();
+      if (selectedProvider === 'Autex') {
+        provider = new Autex();
       }
       
       let arrDest = provider.convert(csvToArray(event.target.result)); 
       let destString = csvHeaders.join(',') + "\n";
-      arrDest.forEach(row => {
-        row.forEach(col => {
+      for (let i = 0; i < arrDest.length; i++) {
+        let row = arrDest[i];
+        for (let j = 0; j < row.length; j++) {
+          let col = row[j];
           if (col && (col.includes(csvDelimiter) || col.includes(' '))) {
-            col = '"' + col.replace('"', '""'), + '"';
+            row[j] = '"' + col.replace('"', '""') + '"';
           }
-        });
+        };
 
         destString += row.join(',') + "\n";
-      });
+      };
 
       console.log(destString);
       downloadFile(destString);
