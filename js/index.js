@@ -1,19 +1,35 @@
 import { Autex } from './provider/Autex.js';
-import { Another } from './provider/Another.js';
+import { Complex } from './provider/Complex.js';
 import { csvHeaders } from './csvHeaders.js';
 
 const csvDelimiter = ',';
 
-let providers = ['Autex'];
+let providers = ['Autex', 'Complex'];
+let provider;
+let providerDiv = document.getElementById('providerDiv');
 
 let providerChooser = document.getElementById("providerChooser");
 providers.forEach(element => {
   let option = document.createElement('option');
   option.text = element;
+  option.value = element;
   providerChooser.add(option);
 });
 
-document.getElementById('sourceFile').addEventListener('change', readFile, false);
+providerChooser.addEventListener('change', () => {
+  if (providerChooser.value === 'Autex') {
+    provider = new Autex();
+  } else if (providerChooser.value === 'Complex') {
+    provider = new Complex();
+  }
+
+  providerDiv.innerHTML = '';
+  provider.renderDiv(providerDiv);
+}, false);
+
+let btnConvert = document.getElementById('btnConvert');
+/*document.getElementById('sourceFile').addEventListener('change', () => { btnConvert.disabled = false; });*/
+btnConvert.addEventListener('click', readFile, false);
 
 function csvToArray(csvSource) {
   let arrData = [];
@@ -55,13 +71,7 @@ function readFile (evt) {
     let files = evt.target.files;
     let file = files[0];           
     let reader = new FileReader();
-    reader.onload = function(event) {  
-      let selectedProvider = providerChooser.options[providerChooser.selectedIndex].text;
-      let provider;
-      if (selectedProvider === 'Autex') {
-        provider = new Autex();
-      }
-      
+    reader.onload = function(event) {        
       let arrDest = provider.convert(csvToArray(event.target.result)); 
       let destString = csvHeaders.join(',') + "\n";
       for (let i = 0; i < arrDest.length; i++) {

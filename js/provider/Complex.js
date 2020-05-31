@@ -1,7 +1,12 @@
 import { constants } from '../constants.js'
 
-class Autex {
+class Complex {
     constructor() {
+        this.allProductsSelector = document.createElement("input");
+        this.allProductsSelector.type = "file";
+        this.actProductsSelector = document.createElement("input");
+        this.actProductsSelector.type = "file";
+
         this.rules = new Map([
             [0, 2],
             [3, 3],
@@ -14,10 +19,10 @@ class Autex {
         let arrDest = [];
         for (let i = 0; i < arrSource.length; i++) {
             let sourceRow = arrSource[i];
-            let checkField = sourceRow[15];
+            /*let checkField = sourceRow[15];
             if (!checkField || isNaN(checkField.replace(' ', ''))) {
                 continue;
-            };
+            };*/
 
             let destRow = Array(54).fill('');
 
@@ -35,7 +40,7 @@ class Autex {
             destRow[key] = value;
         });
 
-        destRow[48] = 'Autex';
+        destRow[48] = 'Complex';
     }
 
     addRules(sourceRow, destRow) {
@@ -47,10 +52,9 @@ class Autex {
     }
 
     renderDiv(container) {
-        let input = document.createElement("input");
-        input.type = "file";
-        container.appendChild(input);
+        container.appendChild(this.allProductsSelector);
+        container.appendChild(this.actProductsSelector);
     }
 }
 
-export { Autex };
+export { Complex };

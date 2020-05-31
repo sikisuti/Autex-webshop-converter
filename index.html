@@ -4,13 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
     <title>Autex Webshop Konverter</title>
 </head>
 
 <body>
-    <select id="providerChooser"></select>
-    <input type="file" id="sourceFile" accept=".csv" />
-
+    <div><select id="providerChooser">
+        <option value="choose">Válassz partnert...</option>
+    </select></div>
+    <div id="providerDiv"></div>
+    <!--<div><input type="file" id="sourceFile" accept=".csv" /></div>-->
+    <div><button id="btnConvert">Konvertálás</button></div>
 
     <script type="module" src="js/index.js"></script>
 </body>
