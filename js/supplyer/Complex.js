@@ -4,6 +4,9 @@ class Complex {
     constructor() {
         this.allProductsSelector = document.createElement("input");
         this.allProductsSelector.type = "file";
+        this.allProductsSelector.addEventListener('change', 
+            (evt) => { this.allProducts = csvToArray(event.target.result); }, 
+            false);
         this.actProductsSelector = document.createElement("input");
         this.actProductsSelector.type = "file";
 
@@ -15,7 +18,8 @@ class Complex {
         ]);
     }
 
-    convert(arrSource) {
+    convert() {
+        alert(this.allProducts);
         let arrDest = [];
         for (let i = 0; i < arrSource.length; i++) {
             let sourceRow = arrSource[i];

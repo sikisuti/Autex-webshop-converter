@@ -1,35 +1,80 @@
-import { Autex } from './provider/Autex.js';
-import { Complex } from './provider/Complex.js';
+import { Autex } from './supplyer/Autex.js';
+import { Complex } from './supplyer/Complex.js';
 import { csvHeaders } from './csvHeaders.js';
 
 const csvDelimiter = ',';
+let supplyer;
 
-let providers = ['Autex', 'Complex'];
-let provider;
-let providerDiv = document.getElementById('providerDiv');
+let supplyerPicker = document.getElementById("supplyerPicker");
+supplyerPicker.addEventListener('change', () => {
+  supplyer = getSupplyer(supplyerPicker.value);
+  supplyerDiv.innerHTML = '';
+  supplyer.renderDiv(supplyerDiv);
+}, false);
+let supplyerDiv = document.getElementById('supplyerDiv');
+let btnConvert = document.getElementById('btnConvert');
+btnConvert.addEventListener('click', readFile, false);
 
-let providerChooser = document.getElementById("providerChooser");
-providers.forEach(element => {
-  let option = document.createElement('option');
-  option.text = element;
-  option.value = element;
-  providerChooser.add(option);
-});
+renderSupplyerPicker(['Autex', 'Complex']);
 
-providerChooser.addEventListener('change', () => {
-  if (providerChooser.value === 'Autex') {
-    provider = new Autex();
-  } else if (providerChooser.value === 'Complex') {
-    provider = new Complex();
+function renderSupplyerPicker(providerList) {
+  providerList.forEach(element => {
+    let option = document.createElement('option');
+    option.text = element;
+    option.value = element;
+    supplyerPicker.add(option);
+  });
+}
+
+function getSupplyer(supplyerName) {
+  let supplyer;
+  if (supplyerName === 'Autex') {
+    supplyer = new Autex();
+  } else if (supplyerName === 'Complex') {
+    supplyer = new Complex();
   }
 
-  providerDiv.innerHTML = '';
-  provider.renderDiv(providerDiv);
-}, false);
+  return supplyer
+}
 
-let btnConvert = document.getElementById('btnConvert');
-/*document.getElementById('sourceFile').addEventListener('change', () => { btnConvert.disabled = false; });*/
-btnConvert.addEventListener('click', readFile, false);
+function readFile(evt) {
+  let files = evt.target.files;
+  let file = files[0];
+  let reader = new FileReader();
+  reader.onload = function (event) {
+    let arrDest = supplyer.convert(csvToArray(event.target.result));
+    let destString = arrayToCsv(arrDest);
+    console.log(destString);
+    downloadFile(destString);
+  }
+
+  reader.readAsText(file)
+}
+
+function arrayToCsv(arrDest) {
+  let destString = csvHeaders.join(',') + "\n";
+  for (let i = 0; i < arrDest.length; i++) {
+    let row = arrDest[i];
+    for (let j = 0; j < row.length; j++) {
+      let col = row[j];
+      if (col && (col.includes(csvDelimiter) || col.includes(' '))) {
+        row[j] = '"' + col.replace('"', '""') + '"';
+      }
+    };
+
+    destString += row.join(',') + "\n";
+  };
+
+  return destString;
+}
+
+function downloadFile(destString) {
+  let hiddenElement = document.createElement('a');
+  hiddenElement.href = 'data:text/csv;charset=utf-8,' + destString;
+  hiddenElement.target = '_blank';
+  hiddenElement.download = 'source.csv';
+  hiddenElement.click();
+}
 
 function csvToArray(csvSource) {
   let arrData = [];
@@ -66,37 +111,3 @@ function csvToArray(csvSource) {
 
   return arrData;
 }
-
-function readFile (evt) {
-    let files = evt.target.files;
-    let file = files[0];           
-    let reader = new FileReader();
-    reader.onload = function(event) {        
-      let arrDest = provider.convert(csvToArray(event.target.result)); 
-      let destString = csvHeaders.join(',') + "\n";
-      for (let i = 0; i < arrDest.length; i++) {
-        let row = arrDest[i];
-        for (let j = 0; j < row.length; j++) {
-          let col = row[j];
-          if (col && (col.includes(csvDelimiter) || col.includes(' '))) {
-            row[j] = '"' + col.replace('"', '""') + '"';
-          }
-        };
-
-        destString += row.join(',') + "\n";
-      };
-
-      console.log(destString);
-      downloadFile(destString);
-    }
-
-    reader.readAsText(file)
- }
-
- function downloadFile(destString) {
-   let hiddenElement = document.createElement('a');
-   hiddenElement.href = 'data:text/csv;charset=utf-8,' + destString;
-   hiddenElement.target = '_blank';
-   hiddenElement.download = 'source.csv';
-   hiddenElement.click();
- }
